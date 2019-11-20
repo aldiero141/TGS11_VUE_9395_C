@@ -2,28 +2,75 @@ import Vue from 'vue';
 import Router from 'vue-router';
 const DashboardLayout = () =>
   import('../components/dashboardLayout.vue');
+const LoginLayout = () => 
+  import('../components/loginLayout.vue');
 
 function loadView(view) {
   return () =>
     import(`../components/dashboardContents/${view}.vue`);
 }
+function isAuthenticated() {
+  if (localStorage.getItem('token') == null) {
+    return true;
+  }
+}
 
 const routes = [
   {
-    path: '/',
+    path: '/dashboard',
     component: DashboardLayout,
     children: [
       {
+        name: 'Dashboard',
+        path: '/dashboard',
+        component: loadView('dashboard'),
+        beforeEnter(to, from, next) {
+          if (!isAuthenticated()) {
+            next();
+          } else {
+            next('/user');
+          }
+        }
+      },
+      {
         name: 'UserController',
-        path: '/',
-        component: loadView('userController')
+        path: '/user',
+        component: loadView('userController'),
+        beforeEnter(to, from, next) {
+          if (!isAuthenticated()) {
+            next();
+          } else {
+            next('/');
+            alert('Please Login to Continue!');
+          }
+        }
       },
       {
         name: 'BranchController',
         path: '/branch',
-        component: loadView('branchController')
-      },
+        component: loadView('branchController'),
+        beforeEnter(to, from, next) {
+          if (!isAuthenticated()) {
+            next();
+          } else {
+            next('/');
+            alert('Please Login to Continue!');
+          }
+        }
+      }
     ]
+  },
+  {
+    path: '/',
+    component: LoginLayout,
+    name: 'loginLayout',
+       beforeEnter(to, from, next) {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/user');
+          }
+        }
   }
 ];
 Vue.use(Router);

@@ -20,7 +20,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block>Logout</v-btn>
+          <v-btn block @click="logout()">Logout</v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -55,6 +55,13 @@ export default {
         },
       ]
     };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push({ name: "loginLayout" });
+      alert("Success Logout!");
+    }
   }
 };
 </script>
