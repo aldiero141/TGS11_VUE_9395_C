@@ -127,6 +127,11 @@ export default {
   },
   methods: {
     getData() {
+      var getToken = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      };
       var uri = this.$apiUrl + "/branch";
       this.$http.get(uri).then(response => {
         this.branches = response.data.message;
