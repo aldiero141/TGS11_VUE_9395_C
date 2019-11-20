@@ -128,7 +128,7 @@ export default {
         }
       };
       var uri = this.$apiUrl + "/user";
-      this.$http.get(uri).then(response => {
+      this.$http.get(uri, getToken).then(response => {
         this.users = response.data.message;
       });
     },

@@ -1,13 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-const DashboardLayout = () =>
-  import('../components/dashboardLayout.vue');
-const LoginLayout = () => 
-  import('../components/loginLayout.vue');
+const DashboardLayout = () => import('../components/dashboardLayout.vue');
+const LoginLayout = () => import('../components/loginLayout.vue');
 
 function loadView(view) {
-  return () =>
-    import(`../components/dashboardContents/${view}.vue`);
+  return () => import(`../components/dashboardContents/${view}.vue`);
 }
 function isAuthenticated() {
   if (localStorage.getItem('token') == null) {
@@ -20,18 +17,6 @@ const routes = [
     path: '/dashboard',
     component: DashboardLayout,
     children: [
-      {
-        name: 'Dashboard',
-        path: '/dashboard',
-        component: loadView('dashboard'),
-        beforeEnter(to, from, next) {
-          if (!isAuthenticated()) {
-            next();
-          } else {
-            next('/user');
-          }
-        }
-      },
       {
         name: 'UserController',
         path: '/user',
@@ -57,7 +42,19 @@ const routes = [
             alert('Please Login to Continue!');
           }
         }
-      }
+      },
+      {
+        name: 'Dashboard',
+        path: '/dashboard',
+        component: loadView('dashboard'),
+        beforeEnter(to, from, next) {
+          if (!isAuthenticated()) {
+            next();
+          } else {
+            next('/user');
+          }
+        }
+      },
     ]
   },
   {
